@@ -1,0 +1,26 @@
+page
+    navigation
+        home
+        scoreboard
+        analytics
+
+    scoreboard
+        Game Info
+            Timer/stopwatch
+            Current set (which I want to be touching each team's sets won since they also relate to each other)
+
+        team1
+            +1 button (which also is the scoreboard)
+            -1 button
+            sets-won
+            team name
+        
+        team2
+            +1 button which also is the scoreboard
+            -1 button
+            sets-won
+            team name
+        
+        additional features drop down menu
+
+    analytics
