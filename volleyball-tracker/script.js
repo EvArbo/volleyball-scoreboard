@@ -3,7 +3,8 @@
 // -------------------------
 
 const gameState = {
-    currentSet: 1,
+    elapsedSeconds: 0,
+    isTimerRunning: false,
 
     teamOne: {
         score: 0,
@@ -38,6 +39,13 @@ const scoreButtons =
 const subtractButtons =
     document.querySelectorAll(".subtract-button");
 
+const setAddButtons =
+    document.querySelectorAll(".set-add-button");
+
+const setSubtractButtons =
+    document.querySelectorAll(".set-subtract-button");
+
+
 
 // -------------------------
 // 3. RENDERING
@@ -62,6 +70,14 @@ function renderGame() {
 
     currentSetDisplay.textContent =
         gameState.currentSet;
+    
+    const currentSet =
+        gameState.teamOne.setsWon
+        + gameState.teamTwo.setsWon
+        + 1;
+    
+    currentSetDisplay.textContent =
+        currentSet;
 }
 
 
@@ -100,6 +116,33 @@ function decreaseScore(event) {
     renderGame();
 }
 
+function resetScores() {
+    gameState.teamOne.score = 0;
+    gameState.teamTwo.score = 0;
+
+    renderGame();
+}
+
+function increaseSetsWon(event) {
+    const teamSection = event.currentTarget.closest(".set-control");
+    const teamKey = teamSection.dataset.team;
+
+    gameState[teamKey].setsWon += 1;
+
+    renderGame();
+}
+
+function decreaseSetsWon(event) {
+    const teamSection = event.currentTarget.closest(".set-control");
+    const teamKey = teamSection.dataset.team;
+
+    if (gameState[teamKey].setsWon > 0) {
+        gameState[teamKey].setsWon -= 1;
+    }
+
+    renderGame();
+}
+
 
 // -------------------------
 // 5. EVENT LISTENERS
@@ -116,6 +159,20 @@ for (const subtractButton of subtractButtons) {
     subtractButton.addEventListener(
         "click",
         decreaseScore
+    );
+}
+
+for (const setAddButton of setAddButtons) {
+    setAddButton.addEventListener(
+        "click",
+        increaseSetsWon
+    );
+}
+
+for (const setSubtractButton of setSubtractButtons) {
+    setSubtractButton.addEventListener(
+        "click",
+        decreaseSetsWon
     );
 }
 
