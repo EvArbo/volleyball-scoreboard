@@ -9,18 +9,30 @@ page
             Timer/stopwatch
             Current set (which I want to be touching each team's sets won since they also relate to each other)
 
-        team1
-            +1 button (which also is the scoreboard)
-            -1 button
-            sets-won
-            team name
+        teams
+            team1
+                +1 button (which also is the scoreboard)
+                -1 button
+                team name
+            
+            team2
+                +1 button which also is the scoreboard
+                -1 button
+                team name
         
-        team2
-            +1 button which also is the scoreboard
-            -1 button
-            sets-won
-            team name
+        Set Summary
+            team1
+                sets won
+
+            current sets
+
+            team2
+                sets won
         
-        additional features drop down menu
+        additional-features
+            features-toggle-button
+            features-menu
+                reset-scores-button
+                reset-match-button
 
     analytics
