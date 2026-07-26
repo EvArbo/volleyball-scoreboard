@@ -6,8 +6,6 @@
     </head>
 
     <body>
-        <h1>Live Scoreboard</h1>
-
         <header>
             <nav aria-label="Main navigation">
                 <a href="#">Home</a>
@@ -20,18 +18,30 @@
         <main>
             <section class="scoreboard">
                 <section class="game-info">
-                    <time datetime="PT0S">0:00</time>
+                    <h2>Team 1</h2>
+                    <section class="timer">
+                        <button class="timer-toggle-button" type="button"></button>
+                        
+                        <input
+                            class="timer-input"
+                            type="text"
+                            inputmode="numeric"
+                            aria-label="timer"
+                            placeholder="0:00"
+                        >
+                        
+                        <button class="timer-reset-button" type="button">Reset</button>
+                    </section>
+                    <h2>Team 2</h2>
                 </section>
 
                 <section class="teams">
                     <section class="team team-one" data-team="teamOne">
-                        <h2>Team 1</h2>
                         <button class="score-button" type="button"></button>
                         <button class="subtract-button" type="button">-1</button>
                     </section>
                     
                     <section class="team team-two" data-team="teamTwo">
-                        <h2>Team 2</h2>
                         <button class="score-button" type="button"></button>
                         <button class="subtract-button" type="button">-1</button>
                     </section>
@@ -42,7 +52,7 @@
                         <button class="set-subtract-button" type="button">-1</button>
 
                         <p>
-                            Team 1 sets:
+                            Team 1 Sets: 
                             <span class="team-one-sets"></span>
                         </p>
 
@@ -51,7 +61,7 @@
                     
                     <section class="set-control">
                         <p>
-                            Set 
+                            Set: 
                             <span class="current-set"></span>
                         </p>
                     </section>
@@ -60,7 +70,7 @@
                         <button class="set-subtract-button" type="button">-1</button>
 
                         <p>
-                            Team 2 sets:
+                            Team 2 Sets: 
                             <span class="team-two-sets"></span>
                         </p>
 
@@ -68,16 +78,31 @@
                     </section>
                 </section>
 
-                <label for="additional-features">
-                    Additional Features
-                </label>
+                <section class="additional-features">
+                    <button
+                        class="features-toggle-button"
+                        type="button"
+                        aria-expanded="false"
+                    >
+                        Additional Features
+                    </button>
 
-                <select id="additional-features">
-                    <option value="">Choose an action</option>
-                    <option value="pause">Pause timer</option>
-                    <option value="end-set">End set</option>
-                    <option value="end-match">End match</option>
-                </select>
+                    <div class="features-menu" hidden>
+                        <button
+                            class="reset-scores-button"
+                            type="button"
+                        >
+                            Reset Scores
+                        </button>
+
+                        <button
+                            class="reset-match-button"
+                            type="button"
+                        >
+                            Reset Match
+                        </button>
+                    </div>
+                </section>
             </section>
         </main>
         <script src="script.js"></script>
