@@ -22,6 +22,7 @@ let timerIntervalId = null;
 
 let timerEntryDigits = "";
 let isEnteringTimer = false;
+let alarmTimeoutIds = [];
 
 
 
@@ -277,6 +278,8 @@ function toggleTimer() {
 }
 
 function startTimer() {
+    stopTimerSound();
+
     if (gameState.remainingSeconds <= 0) {
         gameState.remainingSeconds =
             gameState.initialTimerSeconds;
@@ -287,7 +290,6 @@ function startTimer() {
     }
 
     gameState.isTimerRunning = true;
-
     timerIntervalId = setInterval(timerTick, 1000);
 }
 
@@ -312,8 +314,14 @@ function timerTick() {
 }
 
 function resetTimer() {
-    if (!gameState.isTimerRunning && gameState.remainingSeconds == gameState.initialTimerSeconds) {
-        gameState.initialTimerSeconds = 0
+    stopTimerSound();
+
+    if (
+        !gameState.isTimerRunning &&
+        gameState.remainingSeconds ===
+            gameState.initialTimerSeconds
+    ) {
+        gameState.initialTimerSeconds = 0;
     }
 
     pauseTimer();
@@ -324,30 +332,105 @@ function resetTimer() {
     renderGame();
 }
 
-function playTimerSound() {
+const alarmSound = [
+    // Main melody
+    { freq: 293.66, duration: 192 }, // D4
+    { freq: 369.99, duration: 192 }, // F#4
+    { freq: 392.00, duration: 192 }, // G4
+    { freq: 293.66, duration: 192 }, // D4
+    { freq: 0,      duration: 192 },
+
+    { freq: 369.99, duration: 192 }, // F#4
+    { freq: 392.00, duration: 192 }, // G4
+    { freq: 293.66, duration: 192 }, // D4
+
+    { freq: 0,      duration: 192 },
+    { freq: 293.66, duration: 192 }, // D4
+    { freq: 369.99, duration: 192 }, // F#4
+    { freq: 392.00, duration: 192 }, // G4
+    { freq: 440.00, duration: 192 }, // A4
+    { freq: 493.88, duration: 192 }, // B4
+    { freq: 440.00, duration: 192 }, // A4
+    { freq: 392.00, duration: 192 }, // G4
+
+    { freq: 369.99, duration: 192 }, // F#4 / Gb4
+    { freq: 0,      duration: 192 },
+    { freq: 0,      duration: 192 },
+    { freq: 369.99, duration: 192 }, // F#4 / Gb4
+
+    { freq: 0,      duration: 192 },
+    { freq: 0,      duration: 192 },
+    { freq: 369.99, duration: 192 }, // F#4 / Gb4
+    { freq: 392.00, duration: 192 }, // G4
+    { freq: 392.00, duration: 192 }, // G4
+];
+
+function playFrequency(frequency, duration) {
     const audioContext = new AudioContext();
+
     const oscillator = audioContext.createOscillator();
-    const volume = audioContext.createGain();
+    const gainNode = audioContext.createGain();
 
-    oscillator.connect(volume);
-    volume.connect(audioContext.destination);
+    oscillator.type = "triangle";
+    oscillator.frequency.value = frequency;
 
-    oscillator.frequency.value = 800;
-    volume.gain.value = 0.2;
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+
+    gainNode.gain.value = 0.2;
 
     oscillator.start();
-    oscillator.stop(audioContext.currentTime + 0.5);
+
+    setTimeout(() => {
+        oscillator.stop();
+        audioContext.close();
+    }, duration);
+}
+
+function playTimerSound() {
+    stopTimerSound();
+
+    let delay = 0;
+
+    for (const note of alarmSound) {
+        const timeoutId = setTimeout(() => {
+            if (note.freq !== 0) {
+                playFrequency(
+                    note.freq,
+                    note.duration
+                );
+            }
+        }, delay);
+
+        alarmTimeoutIds.push(timeoutId);
+
+        delay += note.duration;
+    }
+}
+
+function stopTimerSound() {
+    for (const timeoutId of alarmTimeoutIds) {
+        clearTimeout(timeoutId);
+    }
+
+    alarmTimeoutIds = [];
 }
 
 function timerDigitsToSeconds(digits) {
     const placeValues = [1, 10, 60, 600];
-    const reversedDigits = digits.split("").reverse();
+    const reversedDigits =
+        digits.split("").reverse();
 
     let totalSeconds = 0;
 
-    for (let i = 0; i < reversedDigits.length; i++) {
+    for (
+        let i = 0;
+        i < reversedDigits.length;
+        i++
+    ) {
         totalSeconds +=
-            Number(reversedDigits[i]) * placeValues[i];
+            Number(reversedDigits[i])
+            * placeValues[i];
     }
 
     return totalSeconds;
