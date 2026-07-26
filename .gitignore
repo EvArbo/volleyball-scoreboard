@@ -5,4 +5,4 @@
 .vscode/
 
 # Logs
-*.log
+*.log.DS_Store
