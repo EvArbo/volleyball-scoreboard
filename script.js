@@ -387,24 +387,42 @@ function playFrequency(frequency, duration) {
     }, duration);
 }
 
-function playTimerSound() {
-    stopTimerSound();
+const audioContext = new AudioContext();
 
-    let delay = 0;
+function playTimerSound() {
+    let noteStartTime = audioContext.currentTime;
 
     for (const note of alarmSound) {
-        const timeoutId = setTimeout(() => {
-            if (note.freq !== 0) {
-                playFrequency(
-                    note.freq,
-                    note.duration
-                );
-            }
-        }, delay);
+        const durationInSeconds =
+            note.duration / 1000;
 
-        alarmTimeoutIds.push(timeoutId);
+        if (note.freq !== 0) {
+            const oscillator =
+                audioContext.createOscillator();
 
-        delay += note.duration;
+            const gainNode =
+                audioContext.createGain();
+
+            oscillator.type = "triangle";
+            oscillator.frequency.value =
+                note.freq;
+
+            oscillator.connect(gainNode);
+            gainNode.connect(
+                audioContext.destination
+            );
+
+            gainNode.gain.value = 0.2;
+
+            oscillator.start(noteStartTime);
+
+            oscillator.stop(
+                noteStartTime
+                + durationInSeconds
+            );
+        }
+
+        noteStartTime += durationInSeconds;
     }
 }
 
