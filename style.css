@@ -17,8 +17,16 @@
     box-sizing: border-box;
 }
 
+html,
+body {
+    height: 100%;
+}
+
 body {
     margin: 0;
+    min-height: 100 dvh;
+    display: flex;
+    flex-direction: column;
     font-family: Arial, sans-serif;
     background-color: var(--page-background);
     color: var(--page-text);
@@ -26,19 +34,26 @@ body {
 
 nav {
     display: flex;
+    flex: 0 0 auto;
     gap: 24px;
     padding: 16px 24px;
     border-bottom: 2px solid black;
 }
 
 main {
-    min-height: calc(100vh - 58px);
+    flex: 1;
+    min-height: 0;
+    display: flex;
     background-color: var(--nav-background);
     border-bottom: 2px solid var(--border-color);
 }
 
 .scoreboard {
-    min-height: calc(100vh - 58px);
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    max-width: 1200px;
+    margin-inline: auto;
     display: flex;
     flex-direction: column;
     border: 2px solid black;
@@ -58,6 +73,7 @@ main {
 .game-info,
 .set-summary,
 .timer {
+    flex: 0 0 auto;
     background-color: var(--scoreboard-black);
     color: var(--scoreboard-white);
 }
@@ -75,6 +91,12 @@ main {
     border-right: none;
 }
 
+.game-info > *,
+.team,
+.set-control {
+    min-width: 0;
+}
+
 .timer {
     display: flex;
     align-items: stretch;
@@ -86,9 +108,8 @@ main {
 }
 
 .timer-input {
-    flex: 1 1 auto;
+    flex: 1 1 110px;
     min-width: 0;
-    min-width: 110px;
     box-sizing: border-box;
 
     text-align: center;
@@ -102,7 +123,7 @@ main {
 
 .timer-toggle-button,
 .timer-reset-button {
-    flex: 0 0 100px;
+    flex: 0 1 100px;
     min-width: 0;
     box-sizing: border-box;
 }
@@ -131,11 +152,14 @@ button:active {
 .teams {
     display: flex;
     flex: 1;
+    min-height: 0;
 }
 
 .team {
     flex: 1;
     display: flex;
+    min-width: 0;
+    min-height: 0;
     flex-direction: column;
     border: 2px solid black;
 }
@@ -168,9 +192,9 @@ button:active {
 
 .score-button {
     flex: 1;
-    display: block;
+    min-height: 0;
     width: 100%;
-    font-size: 120px;
+    font-size: clamp(5rem, 14vw, 10rem);
     padding: 12px 18px;
 }
 
@@ -222,4 +246,39 @@ button:active {
 .current-set {
     margin-left: 6px;
     color: var(--scoreboard-yellow);
+}
+
+@media (max-width: 600px) {
+    .game-info > h2 {
+        font-size: 1rem;
+    }
+
+    .timer-toggle-button,
+    .timer-reset-button {
+        flex-basis: 64px;
+        font-size: 0.85rem;
+    }
+
+    .timer-input {
+        flex-basis: 76px;
+        font-size: 2rem;
+    }
+
+    .set-add-button,
+    .set-subtract-button {
+        width: 44px;
+        flex: 0 1 44px;
+    }
+
+    .set-control:not([data-team]) {
+        min-width: 70px;
+    }
+
+    .set-control[data-team] {
+        min-width: 0;
+    }
+
+    .set-control > p {
+        font-size: 1rem;
+    }
 }
