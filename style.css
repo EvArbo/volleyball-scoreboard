@@ -109,10 +109,23 @@ main {
 
 button {
     cursor: pointer;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
+    background-color: var(--scoreboard-black);
+    color: var(--scoreboard-white);
+    border: 2px solid var(--scoreboard-white);
+    transition:
+        transform 0.05s,
+        filter 0.05s;
 }
 
 button:hover {
     filter: brightness(0.9);
+}
+
+button:active {
+    transform: scale(0.98);
 }
 
 .teams {
@@ -209,10 +222,4 @@ button:hover {
 .current-set {
     margin-left: 6px;
     color: var(--scoreboard-yellow);
-}
-
-button {
-    background-color: var(--scoreboard-black);
-    color: var(--scoreboard-white);
-    border: 2px solid var(--scoreboard-white);
 }
