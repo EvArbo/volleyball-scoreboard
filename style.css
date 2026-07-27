@@ -1,120 +1,350 @@
+/* ==================================================
+   1. DESIGN TOKENS
+================================================== */
+
 :root {
+    /* Colors */
     --scoreboard-black: #111;
     --scoreboard-white: #fff;
-
-    --team-one-blue: #1f4ed8;
-    --team-two-red: #e32222;
     --scoreboard-yellow: #ffd400;
+
+    --team-one-color: #1f4ed8;
+    --team-two-color: #e32222;
 
     --page-background: #f3f3f3;
     --page-text: #111;
-
-    --border-color: #111;
     --nav-background: #f3f3f3;
+    --border-color: #111;
+
+    /* Borders */
+    --border-width: 2px;
+
+    /* Spacing */
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+
+    /* Control sizes */
+    --timer-button-width: 100px;
+    --set-button-width: 60px;
+
+    /* Layout */
+    --scoreboard-max-width: 1200px;
 }
+
+
+/* ==================================================
+   2. GLOBAL RESET
+================================================== */
 
 * {
     box-sizing: border-box;
 }
 
+html,
 body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: var(--page-background);
-    color: var(--page-text);
+    height: 100%;
 }
 
-nav {
+body {
+    margin: 0;
+    min-height: 100vh;
+    min-height: 100dvh;
+
     display: flex;
-    gap: 24px;
-    padding: 16px 24px;
-    border-bottom: 2px solid black;
+    flex-direction: column;
+
+    font-family: Arial, sans-serif;
+    color: var(--page-text);
+    background-color: var(--page-background);
+}
+
+
+/* ==================================================
+   3. PAGE LAYOUT
+================================================== */
+
+nav {
+    flex: 0 0 auto;
+
+    display: flex;
+    gap: var(--space-lg);
+
+    padding: var(--space-md) var(--space-lg);
+
+    background-color: var(--nav-background);
+    border-bottom:
+        var(--border-width)
+        solid
+        var(--border-color);
 }
 
 main {
-    min-height: calc(100vh - 58px);
-    background-color: var(--nav-background);
-    border-bottom: 2px solid var(--border-color);
+    flex: 1;
+    min-height: 0;
+
+    display: flex;
+
+    background-color: var(--page-background);
 }
 
+
+/* ==================================================
+   4. SCOREBOARD SHELL
+================================================== */
+
 .scoreboard {
-    min-height: calc(100vh - 58px);
+    flex: 1;
+    min-height: 0;
+
+    width: 100%;
+    max-width: var(--scoreboard-max-width);
+    margin-inline: auto;
+
     display: flex;
     flex-direction: column;
-    border: 2px solid black;
+
+    border:
+        var(--border-width)
+        solid
+        var(--border-color);
 }
 
 .scoreboard > h1 {
     text-align: center;
 }
 
-.game-info {
-    display: flex;
-    justify-content: space-around;
-    border: 2px solid black;
-    height: 50px;
-}
 
-.game-info,
-.set-summary,
-.timer {
-    background-color: var(--scoreboard-black);
+/* ==================================================
+   5. GAME HEADER
+================================================== */
+
+.game-info {
+    flex: 0 0 auto;
+
+    display: flex;
+    height: 50px;
+
     color: var(--scoreboard-white);
+    background-color: var(--scoreboard-black);
+
+    border:
+        var(--border-width)
+        solid
+        var(--border-color);
 }
 
 .game-info > * {
     flex: 1;
+    min-width: 0;
+
     display: flex;
     justify-content: center;
     align-items: center;
+
     margin: 0;
-    border-right: 2px solid black;
+
+    border-right:
+        var(--border-width)
+        solid
+        var(--border-color);
 }
 
 .game-info > *:last-child {
     border-right: none;
 }
 
+
+/* ==================================================
+   6. TIMER
+================================================== */
+
 .timer {
     display: flex;
     align-items: stretch;
+
     width: 100%;
     min-width: 0;
-    box-sizing: border-box;
-    background-color: var(--scoreboard-black);
+
     color: var(--scoreboard-white);
+    background-color: var(--scoreboard-black);
 }
 
 .timer-input {
-    flex: 1 1 auto;
+    flex: 1 1 110px;
     min-width: 0;
-    min-width: 110px;
-    box-sizing: border-box;
 
     text-align: center;
     font-size: 2.5rem;
     font-weight: bold;
 
-    background-color: var(--scoreboard-black);
     color: var(--scoreboard-white);
+    background-color: var(--scoreboard-black);
+
     border: none;
 }
 
 .timer-toggle-button,
 .timer-reset-button {
-    flex: 0 0 100px;
+    flex: 0 1 var(--timer-button-width);
     min-width: 0;
-    box-sizing: border-box;
 }
+
+
+/* ==================================================
+   7. TEAM SCORE AREAS
+================================================== */
+
+.teams {
+    flex: 1;
+    min-height: 0;
+
+    display: flex;
+}
+
+.team {
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    border:
+        var(--border-width)
+        solid
+        var(--border-color);
+}
+
+.team-one {
+    background-color: var(--team-one-color);
+}
+
+.team-two {
+    background-color: var(--team-two-color);
+}
+
+.team-one button {
+    background-color: var(--team-one-color);
+}
+
+.team-two button {
+    background-color: var(--team-two-color);
+}
+
+.score-button {
+    flex: 1;
+    min-height: 0;
+
+    width: 100%;
+
+    padding: 12px 18px;
+
+    font-size: clamp(5rem, 14vw, 10rem);
+    color: var(--scoreboard-white);
+}
+
+.subtract-button {
+    flex: 0 0 auto;
+
+    padding: 12px 18px;
+
+    font-size: 1.5rem;
+}
+
+
+/* ==================================================
+   8. SET SUMMARY
+================================================== */
+
+.set-summary {
+    flex: 0 0 auto;
+
+    display: flex;
+
+    color: var(--scoreboard-white);
+    background-color: var(--scoreboard-black);
+
+    border:
+        var(--border-width)
+        solid
+        var(--border-color);
+}
+
+.set-control {
+    min-width: 0;
+
+    display: flex;
+    align-items: stretch;
+
+    border-right:
+        var(--border-width)
+        solid
+        var(--border-color);
+}
+
+.set-control:last-child {
+    border-right: none;
+}
+
+.set-control[data-team] {
+    flex: 1;
+}
+
+.set-control:not([data-team]) {
+    flex: 0 0 auto;
+
+    min-width: 100px;
+
+    align-items: center;
+}
+
+.set-control > p {
+    flex: 1;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin: 0;
+
+    font-size: 1.25rem;
+}
+
+.set-add-button,
+.set-subtract-button {
+    flex: 0 1 var(--set-button-width);
+    width: var(--set-button-width);
+}
+
+.team-one-sets,
+.team-two-sets,
+.current-set {
+    margin-left: 6px;
+    color: var(--scoreboard-yellow);
+}
+
+
+/* ==================================================
+   9. SHARED BUTTON BEHAVIOR
+================================================== */
 
 button {
     cursor: pointer;
+
     touch-action: manipulation;
     user-select: none;
     -webkit-user-select: none;
-    background-color: var(--scoreboard-black);
+
     color: var(--scoreboard-white);
-    border: 2px solid var(--scoreboard-white);
+    background-color: var(--scoreboard-black);
+
+    border:
+        var(--border-width)
+        solid
+        var(--scoreboard-white);
+
     transition:
         transform 0.05s,
         filter 0.05s;
@@ -128,98 +358,43 @@ button:active {
     transform: scale(0.98);
 }
 
-.teams {
-    display: flex;
-    flex: 1;
-}
 
-.team {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    border: 2px solid black;
-}
+/* ==================================================
+   10. MOBILE OVERRIDES
+================================================== */
 
-.team-one {
-    background-color: var(--team-one-blue);
-}
+@media (max-width: 600px) {
+    :root {
+        --timer-button-width: 64px;
+        --set-button-width: 44px;
+    }
 
-.team-two {
-    background-color: var(--team-two-red);
-}
+    nav {
+        gap: var(--space-md);
+        padding:
+            var(--space-md)
+            var(--space-md);
+    }
 
-.team-one .score-button {
-    background-color: var(--team-one-blue);
-    color: var(--scoreboard-white);
-}
+    .game-info > h2 {
+        font-size: 1rem;
+    }
 
-.team-two .score-button {
-    background-color: var(--team-two-red);
-    color: var(--scoreboard-white);
-}
+    .timer-toggle-button,
+    .timer-reset-button {
+        font-size: 0.85rem;
+    }
 
-.team-one button {
-    background-color: var(--team-one-blue);
-}
+    .timer-input {
+        flex-basis: 76px;
+        font-size: 2rem;
+    }
 
-.team-two button {
-    background-color: var(--team-two-red);
-}
+    .set-control:not([data-team]) {
+        min-width: 70px;
+    }
 
-.score-button {
-    flex: 1;
-    display: block;
-    width: 100%;
-    font-size: 120px;
-    padding: 12px 18px;
-}
-
-.subtract-button {
-    font-size: 24px;
-    padding: 12px 18px;
-}
-
-.set-summary {
-    display: flex;
-    border: 2px solid black;
-}
-
-.set-control {
-    display: flex;
-    align-items: stretch;
-    border-right: 2px solid black;
-}
-
-.set-control:last-child {
-    border-right: none;
-}
-
-.set-control[data-team] {
-    flex: 1;
-}
-
-.set-control:not([data-team]) {
-    flex: 0 0 auto;
-    align-items: center;
-    min-width: 100px;
-}
-
-.set-add-button, .set-subtract-button {
-    width: 60px;
-}
-
-.set-control > p {
-    flex: 1;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.25rem;
-}
-
-.team-one-sets,
-.team-two-sets,
-.current-set {
-    margin-left: 6px;
-    color: var(--scoreboard-yellow);
+    .set-control > p {
+        font-size: 1rem;
+    }
 }
