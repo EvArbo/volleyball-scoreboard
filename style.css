@@ -30,7 +30,9 @@
     --set-button-width: 60px;
 
     /* Layout */
-    --scoreboard-max-width: 1200px;
+    --scoreboard-max-width: 100%;
+    --scoreboard-max-height: 100%;
+    --game-info-height: 50px;
 }
 
 
@@ -42,16 +44,14 @@
     box-sizing: border-box;
 }
 
-html,
-body {
-    height: 100%;
+html {
+    min-height: 100%;
 }
 
 body {
     margin: 0;
     min-height: 100vh;
     min-height: 100dvh;
-
     display: flex;
     flex-direction: column;
 
@@ -67,13 +67,14 @@ body {
 
 nav {
     flex: 0 0 auto;
-
     display: flex;
+    flex-wrap: wrap;
     gap: var(--space-lg);
 
     padding: var(--space-md) var(--space-lg);
 
     background-color: var(--nav-background);
+
     border-bottom:
         var(--border-width)
         solid
@@ -81,9 +82,7 @@ nav {
 }
 
 main {
-    flex: 1;
-    min-height: 0;
-
+    flex: 1 0 auto;
     display: flex;
 
     background-color: var(--page-background);
@@ -95,11 +94,9 @@ main {
 ================================================== */
 
 .scoreboard {
-    flex: 1;
-    min-height: 0;
-
+    flex: 1 0 auto;
     width: 100%;
-    max-width: var(--scoreboard-max-width);
+    max-width: none;
     margin-inline: auto;
 
     display: flex;
@@ -109,6 +106,8 @@ main {
         var(--border-width)
         solid
         var(--border-color);
+        
+    background-color: var(--scoreboard-black);
 }
 
 .scoreboard > h1 {
@@ -121,10 +120,10 @@ main {
 ================================================== */
 
 .game-info {
-    flex: 0 0 auto;
+    flex: 0 0 var(--game-info-height);
 
     display: flex;
-    height: 50px;
+    height: var(--game-info-height);
 
     color: var(--scoreboard-white);
     background-color: var(--scoreboard-black);
@@ -136,7 +135,7 @@ main {
 }
 
 .game-info > * {
-    flex: 1;
+    flex: 1 1 0;
     min-width: 0;
 
     display: flex;
@@ -175,8 +174,10 @@ main {
     flex: 1 1 110px;
     min-width: 0;
 
+    padding: 0 var(--space-xs);
+
     text-align: center;
-    font-size: 2.5rem;
+    font-size: clamp(1.75rem, 5vw, 2.5rem);
     font-weight: bold;
 
     color: var(--scoreboard-white);
@@ -197,16 +198,15 @@ main {
 ================================================== */
 
 .teams {
-    flex: 1;
+    flex: 1 1 auto;
     min-height: 0;
 
     display: flex;
 }
 
 .team {
-    flex: 1;
+    flex: 1 1 0;
     min-width: 0;
-    min-height: 0;
 
     display: flex;
     flex-direction: column;
@@ -234,20 +234,33 @@ main {
 }
 
 .score-button {
-    flex: 1;
-    min-height: 0;
+    flex: 1 0 auto;
 
     width: 100%;
+    min-height: clamp(160px, 42dvh, 520px);
 
-    padding: 12px 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-    font-size: clamp(5rem, 14vw, 10rem);
+    padding: var(--space-sm);
+
+    overflow: hidden;
+
+    font-size: clamp(
+        4rem,
+        min(14vw, 24dvh),
+        10rem
+    );
+
+    line-height: 1;
     color: var(--scoreboard-white);
 }
 
 .subtract-button {
     flex: 0 0 auto;
 
+    min-height: 52px;
     padding: 12px 18px;
 
     font-size: 1.5rem;
@@ -289,7 +302,7 @@ main {
 }
 
 .set-control[data-team] {
-    flex: 1;
+    flex: 1 1 0;
 }
 
 .set-control:not([data-team]) {
@@ -301,14 +314,17 @@ main {
 }
 
 .set-control > p {
-    flex: 1;
+    flex: 1 1 auto;
+    min-width: 0;
 
     display: flex;
     justify-content: center;
     align-items: center;
 
     margin: 0;
+    padding-inline: var(--space-xs);
 
+    text-align: center;
     font-size: 1.25rem;
 }
 
@@ -316,6 +332,7 @@ main {
 .set-subtract-button {
     flex: 0 1 var(--set-button-width);
     width: var(--set-button-width);
+    min-width: 0;
 }
 
 .team-one-sets,
@@ -327,7 +344,16 @@ main {
 
 
 /* ==================================================
-   9. SHARED BUTTON BEHAVIOR
+   9. ADDITIONAL FEATURES
+================================================== */
+
+.features-menu {
+    flex: 0 0 auto;
+}
+
+
+/* ==================================================
+   10. SHARED BUTTON BEHAVIOR
 ================================================== */
 
 button {
@@ -360,20 +386,19 @@ button:active {
 
 
 /* ==================================================
-   10. MOBILE OVERRIDES
+   11. MOBILE PORTRAIT
 ================================================== */
 
 @media (max-width: 600px) {
     :root {
         --timer-button-width: 64px;
         --set-button-width: 44px;
+        --game-info-height: 54px;
     }
 
     nav {
         gap: var(--space-md);
-        padding:
-            var(--space-md)
-            var(--space-md);
+        padding: var(--space-md);
     }
 
     .game-info > h2 {
@@ -390,8 +415,58 @@ button:active {
         font-size: 2rem;
     }
 
+    .score-button {
+        min-height: clamp(280px, 55dvh, 620px);
+
+        font-size: clamp(
+            5rem,
+            min(22vw, 18dvh),
+            9rem
+        );
+    }
+
     .set-control:not([data-team]) {
         min-width: 70px;
+    }
+
+    .set-control > p {
+        font-size: 1rem;
+    }
+}
+
+
+/* ==================================================
+   12. SHORT LANDSCAPE SCREENS
+================================================== */
+
+@media (max-height: 600px) and (orientation: landscape) {
+    nav {
+        padding-block: var(--space-sm);
+    }
+
+    .scoreboard,
+    main {
+        min-height: calc(100dvh - 52px);
+    }
+
+    .game-info {
+        flex-basis: 54px;
+        height: 54px;
+    }
+
+    .score-button {
+        min-height: 180px;
+
+        font-size: clamp(
+            4rem,
+            min(14vw, 26dvh),
+            8rem
+        );
+    }
+
+    .subtract-button {
+        min-height: 48px;
+        padding-block: var(--space-sm);
     }
 
     .set-control > p {
