@@ -22,7 +22,12 @@
         <main>
             <section class="scoreboard">
                 <section class="game-info">
-                    <h2>Team 1</h2>
+                    <input
+                        class="team-name-input"
+                        id="team-one-name"
+                        type="text"
+                        value="Team 1"
+                    />
                     <section class="timer">
                         <button class="timer-toggle-button" type="button"></button>
                         
@@ -37,7 +42,12 @@
                         
                         <button class="timer-reset-button" type="button">Reset</button>
                     </section>
-                    <h2>Team 2</h2>
+                    <input
+                        class="team-name-input"
+                        id="team-two-name"
+                        type="text"
+                        value="Team 2"
+                    />
                 </section>
 
                 <section class="teams">
@@ -106,6 +116,99 @@
                         >
                             Reset Match
                         </button>
+
+                        <button
+                            class="auto-ruling-button"
+                            type="button"
+                        >
+                        </button>
+
+                        <div class="configure-rules">
+                            <button
+                                class="configure-rules-button"
+                                type="button"
+                                aria-expanded="false"
+                            >
+                                Configure Rules ▲
+                            </button>
+
+                            <section
+                                class="rules-menu"
+                                hidden
+                            >
+                                <div
+                                    class="rule-control"
+                                    data-rule="setsToWin"
+                                >
+                                    <button
+                                        class="rule-subtract-button"
+                                        type="button"
+                                    >
+                                        -
+                                    </button>
+
+                                    <p>
+                                        Sets to Win:
+                                        <span class="sets-to-win-display"></span>
+                                    </p>
+
+                                    <button
+                                        class="rule-add-button"
+                                        type="button"
+                                    >
+                                        +
+                                    </button>
+                                </div>
+
+                                <div
+                                    class="rule-control"
+                                    data-rule="setLength"
+                                >
+                                    <button
+                                        class="rule-subtract-button"
+                                        type="button"
+                                    >
+                                        -
+                                    </button>
+
+                                    <p>
+                                        Set Length:
+                                        <span class="set-length-display"></span>
+                                    </p>
+
+                                    <button
+                                        class="rule-add-button"
+                                        type="button"
+                                    >
+                                        +
+                                    </button>
+                                </div>
+
+                                <div
+                                    class="rule-control"
+                                    data-rule="lastSetLength"
+                                >
+                                    <button
+                                        class="rule-subtract-button"
+                                        type="button"
+                                    >
+                                        -
+                                    </button>
+
+                                    <p>
+                                        Final Set Length:
+                                        <span class="last-set-length-display"></span>
+                                    </p>
+
+                                    <button
+                                        class="rule-add-button"
+                                        type="button"
+                                    >
+                                        +
+                                    </button>
+                                </div>
+                            </section>
+                        </div>
                     </div>
                 </section>
             </section>

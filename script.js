@@ -8,13 +8,22 @@ const gameState = {
     isTimerRunning: false,
 
     teamOne: {
+        name: "Team 1",
         score: 0,
         setsWon: 0
     },
 
     teamTwo: {
+        name: "Team 2",
         score: 0,
         setsWon: 0
+    },
+
+    rules: {
+        isAREnabled: false,
+        setsToWin: 2,
+        setLength: 25,
+        lastSetLength: 25
     }
 };
 
@@ -31,6 +40,13 @@ let alarmTimeoutIds = [];
 // -------------------------
 
 const teamSections = document.querySelectorAll(".team");
+
+const teamNameInputs =
+    document.querySelectorAll(".team-name-input");
+
+const teamOneNameInput = document.querySelector("#team-one-name");
+
+const teamTwoNameInput = document.querySelector("#team-two-name");
 
 const teamOneSetsDisplay =
     document.querySelector(".team-one-sets");
@@ -65,6 +81,29 @@ const resetScoresButton =
 const resetMatchButton =
     document.querySelector(".reset-match-button");
 
+const autoRulingButton =
+    document.querySelector(".auto-ruling-button");
+
+const rulesMenu =
+    document.querySelector(".rules-menu");
+
+const ruleAddButtons =
+    document.querySelectorAll(".rule-add-button");
+
+const ruleSubtractButtons =
+    document.querySelectorAll(".rule-subtract-button");
+
+const configureRulesButton =
+    document.querySelector(".configure-rules-button");
+
+const setsToWinDisplay =
+    document.querySelector(".sets-to-win-display");
+
+const setLengthDisplay =
+    document.querySelector(".set-length-display");
+
+const lastSetLengthDisplay =
+    document.querySelector(".last-set-length-display");
 const timerToggleButton =
     document.querySelector(".timer-toggle-button");
 
@@ -73,6 +112,7 @@ const timerInput =
 
 const timerResetButton =
     document.querySelector(".timer-reset-button");
+
 
 
 
@@ -104,6 +144,31 @@ function renderGame() {
     
     currentSetDisplay.textContent =
         currentSet;
+    
+    configureRulesButton.hidden =
+        !gameState.rules.isAREnabled;
+
+    autoRulingButton.classList.toggle(
+        "active",
+        gameState.rules.isAREnabled
+    );
+
+    autoRulingButton.textContent =
+        gameState.rules.isAREnabled
+            ? "Automatic Rules: On"
+            : "Automatic Rules: Off";
+
+    setsToWinDisplay.textContent =
+        gameState.rules.setsToWin;
+    
+    setsToWinDisplay.textContent =
+        gameState.rules.setsToWin;
+
+    setLengthDisplay.textContent =
+        gameState.rules.setLength;
+
+    lastSetLengthDisplay.textContent =
+        gameState.rules.lastSetLength;
 
     timerInput.value =
         formatTimer(gameState.remainingSeconds);
@@ -131,6 +196,12 @@ function renderGame() {
 // 4. EVENT HANDLERS
 // -------------------------
 
+function handleTeamNameKeyDown(event) {
+    if (event.key === "Enter") {
+        event.currentTarget.blur();
+    }
+}
+
 function increaseScore(event) {
     const clickedButton = event.currentTarget;
 
@@ -142,6 +213,7 @@ function increaseScore(event) {
 
     gameState[teamKey].score += 1;
 
+    evaluateRules();
     renderGame();
 }
 
@@ -180,6 +252,13 @@ function increaseSetsWon(event) {
     const teamKey = teamSection.dataset.team;
 
     gameState[teamKey].setsWon += 1;
+
+    if (
+        gameState.rules.isAREnabled &&
+        hasWonGame(gameState[teamKey].setsWon)
+    ) {
+        endGame(teamKey);
+    }
 
     renderGame();
 }
@@ -231,6 +310,124 @@ function resetMatch() {
         "aria-expanded",
         "false"
     );
+}
+
+function getCurrentSetLength() {
+    const currentSet = 
+        gameState.teamOne.setsWon +
+        gameState.teamTwo.setsWon +
+        1;
+    const finalPossibleSet = 
+        gameState.rules.setsToWin * 2 - 1;
+
+    if (currentSet == finalPossibleSet) {
+        return gameState.rules.lastSetLength;
+    }
+
+    return gameState.rules.setLength;
+}
+
+function hasWonSet(teamScore, opponentScore) {
+    const targetScore = getCurrentSetLength();
+    if (teamScore >= targetScore && teamScore >= opponentScore + 2) {
+        return true;
+    }
+    return false;
+}
+
+function hasWonGame(setsWon) {
+    const targetSetsToWin = gameState.rules.setsToWin;
+    if (setsWon >= targetSetsToWin) {
+        return true
+    }
+    return false
+}
+
+function endSet(winningTeamKey) {
+    gameState[winningTeamKey].setsWon += 1;
+
+    gameState.teamOne.score = 0;
+    gameState.teamTwo.score = 0;
+}
+
+function endGame(winningTeamKey) {
+    const winningTeamName =
+        winningTeamKey === "teamOne"
+            ? teamOneNameInput.value
+            : teamTwoNameInput.value;
+
+    alert(`${winningTeamName} won the match! 🏐`);
+}
+
+function evaluateRules() {
+    if (!gameState.rules.isAREnabled) {
+        return;
+    }
+
+    if (hasWonSet(gameState.teamOne.score, gameState.teamTwo.score)) {
+        endSet("teamOne");
+        if (hasWonGame(gameState.teamOne.setsWon)) {
+            endGame("teamOne");
+        }
+    } else if (hasWonSet(gameState.teamTwo.score, gameState.teamOne.score)) {
+        endSet("teamTwo");
+        if (hasWonGame(gameState.teamTwo.setsWon)) {
+            endGame("teamTwo");
+        }
+    }
+
+    renderGame();
+}
+
+function toggleAutomaticRules() {
+    gameState.rules.isAREnabled =
+        !gameState.rules.isAREnabled;
+
+    if (!gameState.rules.isAREnabled) {
+        rulesMenu.hidden = true;
+    }
+
+    renderGame();
+}
+
+function increaseRule(event) {
+    const ruleControl =
+        event.currentTarget.closest(".rule-control");
+
+    const ruleKey =
+        ruleControl.dataset.rule;
+
+    gameState.rules[ruleKey]++;
+
+    renderGame();
+}
+
+function decreaseRule(event) {
+    const ruleControl =
+        event.currentTarget.closest(".rule-control");
+
+    const ruleKey =
+        ruleControl.dataset.rule;
+
+    if (gameState.rules[ruleKey] > 1) {
+        gameState.rules[ruleKey] -= 1;
+    }
+
+    renderGame();
+}
+
+function toggleRulesMenu() {
+    rulesMenu.hidden = !rulesMenu.hidden;
+
+    configureRulesButton.setAttribute(
+        "aria-expanded",
+        String(!rulesMenu.hidden)
+    );
+
+    configureRulesButton.textContent =
+        rulesMenu.hidden
+            ? "Configure Rules ▼"
+            : "Configure Rules ▲";
 }
 
 function parseTimerInput(timerText) {
@@ -529,6 +726,21 @@ function handleTimerKeydown(event) {
 // 5. EVENT LISTENERS
 // -------------------------
 
+for (const teamNameInput of teamNameInputs) {
+    teamNameInput.addEventListener(
+        "keydown",
+        handleTeamNameKeyDown
+    );
+}
+
+teamOneNameInput.addEventListener("input", () => {
+    gameState.teamOne.name = teamOneNameInput.value || "Team 1";
+});
+
+teamTwoNameInput.addEventListener("input", () => {
+    gameState.teamTwo.name = teamTwoNameInput.value || "Team 2";
+});
+
 for (const scoreButton of scoreButtons) {
     scoreButton.addEventListener(
         "click",
@@ -581,6 +793,30 @@ timerResetButton.addEventListener(
     "click",
     resetTimer
 );
+
+autoRulingButton.addEventListener(
+    "click",
+    toggleAutomaticRules
+);
+
+configureRulesButton.addEventListener(
+    "click",
+    toggleRulesMenu
+);
+
+for (const ruleAddButton of ruleAddButtons) {
+    ruleAddButton.addEventListener(
+        "click",
+        increaseRule
+    );
+}
+
+for (const ruleSubtractButton of ruleSubtractButtons) {
+    ruleSubtractButton.addEventListener(
+        "click",
+        decreaseRule
+    );
+}
 
 timerInput.addEventListener(
     "keydown",
